@@ -1,95 +1,155 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:hackathon/pin.dart';
 
-showBottomModal(context) {
+class VotingWidget extends State<StatefulWidget> {
+  Color _upColor = Colors.grey;
+  Color _downColor = Colors.grey;
+
+  // Constructor that takes in a Pin object
+  final Pin pin;
+  int votes;
+
+  VotingWidget({required this.pin}) : votes = pin.votes ?? 0;
+
+  @override
+  Widget build(context) {
+    return Container(
+      height: 220,
+      color: Colors.transparent,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0, // has the effect of softening the shadow
+              spreadRadius: 0.0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: <Widget>[
+            Text(
+              pin.type == PinType.garbage ? "Garbage Can" : "Recycling Bin",
+              style: const TextStyle(
+                fontSize: 38,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              "Added on ${pin.createdOn}",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // Size each element evenly across the row
+              mainAxisSize: MainAxisSize.max,
+              // Make the row as wide as possible
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.thumb_down, color: _downColor),
+                  iconSize: 40,
+                  onPressed: () {
+                    setState(() {
+                      _downColor =
+                          _downColor == Colors.red ? Colors.grey : Colors.red;
+                      _upColor = Colors.grey;
+                    });
+                    //sendVote(pin.id, -1);
+                  },
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "$votes",
+                      style: const TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const Text(
+                      "votes",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.thumb_up, color: _upColor),
+                  iconSize: 40,
+                  onPressed: () {
+                    setState(() {
+                      _upColor =
+                          _upColor == Colors.green ? Colors.grey : Colors.green;
+                      _downColor = Colors.grey;
+                    });
+                    //sendVote(pin.id, 1);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<Pin> getPin(String id) async {
+  // Make a request to the server for pin details
+  final response = await http
+      .get(Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin/$id'));
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final pin = Pin.fromJson(data);
+    return pin;
+  } else {
+    throw Exception('Failed to load pins');
+  }
+}
+
+Future<void> sendVote(String id, int vote) async {
+  final response = await http.put(
+    Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin/$id/vote'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Response-Type': 'application/json',
+    },
+    body: jsonEncode(<String, int>{
+      'vote': vote,
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    // Success
+  } else {
+    throw Exception('Failed to send vote');
+  }
+}
+
+showBottomModal(context, Pin pin) async {
+  // Make a request to the server for pin details
+  pin = await getPin(pin.id);
+
   showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (builder) {
-        return Container(
-          // height: 800,
-          color: Colors.transparent,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10.0, // has the effect of softening the shadow
-                  spreadRadius: 0.0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            alignment: Alignment.topLeft,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 5, left: 10),
-                      child: const Text(
-                        "Bottom Modal",
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black87),
-                      ),
-                    ),
-                    Container(
-                        margin: const EdgeInsets.only(top: 5, right: 5),
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Save",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff999999),
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(
-                        color: Color(0xfff8f8f8),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        textAlign: TextAlign.justify,
-                        text: const TextSpan(
-                            text:
-                                "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14,
-                                color: Colors.black,
-                                wordSpacing: 1)),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
+        return VotingWidget(pin: pin).build(context);
       });
 }

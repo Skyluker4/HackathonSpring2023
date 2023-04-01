@@ -27,9 +27,9 @@ class Pin {
           : json['type'] == 'RECYCLE'
               ? PinType.recycle
               : throw Exception('Invalid PinType'),
-      createdOn: json['createdOn'] == null
-          ? null
-          : DateTime.parse((json['createdOn'] as int).toString()),
+      createdOn: json['createdOn'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['createdOn'] * 1000)
+          : null,
       votes: json['votes'] as int?,
     );
   }
