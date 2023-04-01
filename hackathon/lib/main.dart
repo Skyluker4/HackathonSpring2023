@@ -80,48 +80,72 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: null,
-      // Two buttons in the same row
-      // Buttons are aligned to the left and right of the screen
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          // Reset button
-          // Aligns the button to the left with a padding of 35
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 35),
-              // SizedBox is used to set the size of the button
-              child: SizedBox(
-                // The height of the button is 56
-                height: 56,
-                // The width of the button is constrained to the increment button
-                width: MediaQuery.of(context).size.width - 112,
-                child: FloatingActionButton.extended(
-                  onPressed: _resetCounter,
-                  // The label of the button is 'Locate'
-                  // The font size of the label is 20
-                  label: const Text(
-                    'Locate',
-                    style: TextStyle(fontSize: 18),
+        appBar: null,
+        // The body is defined as a SafeArea
+        body: SafeArea(
+          // Two rows are defined
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // The first row is defined as a Row
+            // It contains a Text widget and a IconButton
+            children: [
+              // First row is aligned to the top of the SafeArea
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                    onPressed: () {},
                   ),
-                  icon: const Icon(Icons.location_on),
-                ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {},
+                  ),
+                ],
               ),
-            ),
+              // The second row is aligned to the bottom of the SafeArea
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Locate button aligned to the bottom left
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20),
+                      // SizedBox is used to set the size of the button
+                      child: SizedBox(
+                        height: 56,
+                        // MediaQuery is used to get the width of the screen
+                        // and subtract 112 to get the width of the button
+                        width: MediaQuery.of(context).size.width - 112,
+                        // extended is used to make the button wider
+                        child: FloatingActionButton.extended(
+                          onPressed: _resetCounter,
+                          label: const Text(
+                            'Locate',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          icon: const Icon(Icons.location_on),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Add button aligned to the bottom right
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      // Simple button
+                      child: FloatingActionButton(
+                        onPressed: _incrementCounter,
+                        child: const Icon(Icons.add),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          // Increment button
-          // Aligns the button to the right of the screen
-          Align(
-            alignment: Alignment.bottomRight,
-            child: FloatingActionButton(
-              onPressed: _incrementCounter,
-              child: const Icon(Icons.add),
-            ),
-          ),
-        ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        ));
   }
 }
