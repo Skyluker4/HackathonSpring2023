@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -237,21 +238,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _back() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: FloatingActionButton(
-              onPressed: _mainScene,
-              child: const Icon(Icons.arrow_back),
-            ),
-          ),
+  Widget _recenter() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 132, right: 23),
+        child: IconButton(
+          onPressed: () {
+            // Get current location of the user
+            Geolocator.getCurrentPosition().then((value) {
+              // Move the camera to the current location
+              googleMapController.future.then((controller) {
+                controller.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(value.latitude, value.longitude),
+                      zoom: 18,
+                    ),
+                  ),
+                );
+              });
+            });
+          },
+          icon: const Icon(Icons.my_location),
         ),
-      ],
+      ),
     );
   }
 
@@ -284,6 +295,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 if (_scene == 0) _mainPage(),
                 if (_scene == 1) _addPage(),
                 if (_scene == 2) _locatePage(),
+                // Recenter button
+                _recenter(),
               ],
             ),
           ),
