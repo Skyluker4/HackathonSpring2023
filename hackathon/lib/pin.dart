@@ -29,7 +29,7 @@ class Pin {
               : throw Exception('Invalid PinType'),
       createdOn: json['createdOn'] == null
           ? null
-          : DateTime.parse(json['createdOn'] as String),
+          : DateTime.parse((json['createdOn'] as int).toString()),
       votes: json['votes'] as int?,
     );
   }

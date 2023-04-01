@@ -200,7 +200,24 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               height: 56,
               width: MediaQuery.of(context).size.width - 112,
               child: FloatingActionButton.extended(
-                onPressed: _mainScene,
+                // Add recycle bin to the map when pressed
+                onPressed: () {
+                  // Get lat and long of the current position of the middle of the screen
+                  final controller = googleMapController.future;
+                  controller.then((value) {
+                    value.getVisibleRegion().then((value) {
+                      final lat = (value.northeast.latitude +
+                              value.southwest.latitude) /
+                          2;
+                      final long = (value.northeast.longitude +
+                              value.southwest.longitude) /
+                          2;
+                      // Add the marker to the map
+                      sendPin(lat, long, 'RECYCLE');
+                    });
+                  });
+                  _mainScene();
+                },
                 label: const Text(
                   'Recycle Bin',
                   style: TextStyle(fontSize: 18),
@@ -221,12 +238,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                   height: 56,
                   width: MediaQuery.of(context).size.width - 112,
                   child: FloatingActionButton.extended(
-                    onPressed: _mainScene,
+                    onPressed: () {
+                      final controller = googleMapController.future;
+                      controller.then((value) {
+                        value.getVisibleRegion().then((value) {
+                          final lat = (value.northeast.latitude +
+                                  value.southwest.latitude) /
+                              2;
+                          final long = (value.northeast.longitude +
+                                  value.southwest.longitude) /
+                              2;
+                          // Add the marker to the map
+                          sendPin(lat, long, 'GARBAGE');
+                        });
+                      });
+                      _mainScene();
+                    },
                     label: const Text(
-                      'Compost Bin',
+                      'Trash Bin',
                       style: TextStyle(fontSize: 18),
                     ),
-                    icon: const Icon(Icons.grass),
+                    icon: const Icon(Icons.delete),
                   ),
                 ),
               ),
@@ -289,26 +321,37 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
+  Widget _centerPin() {
+    return const Align(
+      alignment: Alignment.center,
+      child: Icon(
+        Icons.location_on,
+        size: 30,
+        color: Colors.black,
+      ),
+    );
+  }
+
   Future<List<Pin>> getPins() async {
     final response = await http
-        .get(Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin'));
+        .get(Uri.parse('https://hackathon.lukesimmons.codes/api/v1/pin'));
 
-    List<Pin> pins = [];
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
       for (var i = 0; i < data.length; i++) {
         final pin = Pin.fromJson(data[i]);
-        pins.add(pin);
+        _pins.add(pin);
       }
     } else {
       throw Exception('Failed to load pins');
     }
 
-    return pins;
+    return _pins;
   }
 
   final List<Marker> _markers = <Marker>[];
+  final List<Pin> _pins = <Pin>[];
 
   loadData() async {
     final pins = await getPins();
@@ -328,9 +371,36 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
+  // Send data to the server when a new pin is added
+  Future<List<Pin>> sendPin(double lat, double long, String type) async {
+    final response = await http.post(
+      Uri.parse('https://hackathon.lukesimmons.codes/api/v1/pin'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode({
+        'latitude': lat,
+        'longitude': long,
+        'type': type,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final pin = Pin.fromJson(data);
+      _pins.add(pin);
+    } else {
+      throw Exception('Failed to add pin');
+    }
+
+    loadData();
+
+    return _pins;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var markers = <Marker>[];
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -359,6 +429,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 // Switch between scenes
                 if (_scene == 0) _mainPage(),
                 if (_scene == 1) _addPage(),
+                if (_scene == 1) _centerPin(),
                 if (_scene == 2) _locatePage(),
                 // Recenter button
                 _recenter(),
