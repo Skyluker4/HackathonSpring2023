@@ -11,7 +11,6 @@ import 'package:http/http.dart' as http;
 import 'pin.dart';
 import 'bottom_modal.dart';
 import 'package:background_fetch/background_fetch.dart';
-import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +19,6 @@ void main() {
     runApp(const MyApp());
   });
 }
-
-bool blockMouse = false;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -53,7 +50,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  static bool blockMouse = false;
   const MyHomePage({super.key, required this.title});
 
   final String title;
@@ -597,52 +593,49 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-
-    return PointerInterceptor(
-        intercepting: MyHomePage.blockMouse,
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          extendBody: true,
-          body: Stack(
-            children: [
-              // Google Map
-              GoogleMap(
-                initialCameraPosition:
-                    CameraPosition(zoom: 18, target: _currentLatLng),
-                compassEnabled: false,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                mapType: MapType.normal,
-                zoomGesturesEnabled: true,
-                zoomControlsEnabled: false,
-                markers: Set<Marker>.of(_markers),
-                polylines: Set<Polyline>.of(_polylines),
-                onMapCreated: (GoogleMapController controller) async {
-                  // to control the camera position of the map
-                  googleMapController.complete(controller);
-                  _setMapStyle();
-                },
-              ),
-              // Bottom navigation bar
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Stack(
-                    children: [
-                      // Switch between scenes
-                      if (_scene == 0) _mainPage(),
-                      if (_scene == 1) _addPage(),
-                      if (_scene == 1) _centerPin(),
-                      if (_scene == 2) _locatePage(),
-                      // Recenter button
-                      _recenter(),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      body: Stack(
+        children: [
+          // Google Map
+          GoogleMap(
+            initialCameraPosition:
+                CameraPosition(zoom: 18, target: _currentLatLng),
+            compassEnabled: false,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            mapType: MapType.normal,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            markers: Set<Marker>.of(_markers),
+            polylines: Set<Polyline>.of(_polylines),
+            onMapCreated: (GoogleMapController controller) async {
+              // to control the camera position of the map
+              googleMapController.complete(controller);
+              _setMapStyle();
+            },
           ),
-        ));
+          // Bottom navigation bar
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Stack(
+                children: [
+                  // Switch between scenes
+                  if (_scene == 0) _mainPage(),
+                  if (_scene == 1) _addPage(),
+                  if (_scene == 1) _centerPin(),
+                  if (_scene == 2) _locatePage(),
+                  // Recenter button
+                  _recenter(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
