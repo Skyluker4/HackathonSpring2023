@@ -62,6 +62,9 @@ class VotingWidget extends State<StatefulWidget> {
                   icon: Icon(Icons.thumb_down, color: _downColor),
                   iconSize: 40,
                   onPressed: () {
+                    if (pin.votes == 1) {
+                      // Remove the marker from the array
+                    }
                     sendVote(pin.id, -1);
                   },
                 ),

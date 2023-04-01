@@ -81,8 +81,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _loadMapStyles();
     _getLocation();
     loadData();
-    timer =
-        Timer.periodic(const Duration(seconds: 15), (Timer t) => loadData());
+    timer = Timer.periodic(
+        const Duration(seconds: 15), (Timer t) => {getPins(), loadData()});
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(devicePixelRatio: 2.5),
             'assets/images/trash-resize.png')
@@ -313,7 +313,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Widget findTrash() {
     return FloatingActionButton.extended(
       onPressed: () {
+        if (_polylines.isNotEmpty) _polylines.clear();
         computePath(PinType.garbage);
+        _locateCamera(PinType.garbage);
       },
       label: const Text(
         'Trash',
@@ -326,7 +328,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Widget findRecycle() {
     return FloatingActionButton.extended(
       onPressed: () {
+        if (_polylines.isNotEmpty) _polylines.clear();
         computePath(PinType.recycle);
+        _locateCamera(PinType.recycle);
       },
       label: const Text(
         'Recycle',
@@ -444,7 +448,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         icon: pins[i].type == PinType.recycle ? recycleIcon : trashIcon,
         infoWindow: InfoWindow(
           title: pins[i].type == PinType.recycle ? 'Recycle Bin' : 'Trash Bin',
-          snippet: "{pins[i].latitude}, {pins[i].longitude}",
+          snippet: "${pins[i].latitude}, ${pins[i].longitude}",
         ),
         onTap: () => {showBottomModal(context, pins[i])},
       ));
