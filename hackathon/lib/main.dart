@@ -144,8 +144,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: MediaQuery.of(context).size.width - 112,
                 child: FloatingActionButton.extended(
                   onPressed: _resetCounter,
-                  label: const Text('Reset'),
-                  icon: const Icon(Icons.refresh),
+                  // The label of the button is 'Locate'
+                  // The font size of the label is 20
+                  label: const Text(
+                    'Locate',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  icon: const Icon(Icons.location_on),
                 ),
               ),
             ),
