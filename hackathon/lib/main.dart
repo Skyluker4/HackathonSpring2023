@@ -593,32 +593,29 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
       body: Stack(
         children: [
           // Google Map
-          PointerInterceptor(
-              intercepting: MyHomePage.blockMouse,
-              child: GoogleMap(
-                initialCameraPosition:
-                    CameraPosition(zoom: 18, target: _currentLatLng),
-                compassEnabled: false,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                mapType: MapType.normal,
-                zoomGesturesEnabled: true,
-                zoomControlsEnabled: false,
-                markers: Set<Marker>.of(_markers),
-                polylines: Set<Polyline>.of(_polylines),
-                onMapCreated: (GoogleMapController controller) async {
-                  // to control the camera position of the map
-                  googleMapController.complete(controller);
-                  _setMapStyle();
-                },
-              )),
+          GoogleMap(
+            initialCameraPosition:
+                CameraPosition(zoom: 18, target: _currentLatLng),
+            compassEnabled: false,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            mapType: MapType.normal,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            markers: Set<Marker>.of(_markers),
+            polylines: Set<Polyline>.of(_polylines),
+            onMapCreated: (GoogleMapController controller) async {
+              // to control the camera position of the map
+              googleMapController.complete(controller);
+              _setMapStyle();
+            },
+          ),
           // Bottom navigation bar
           Align(
             alignment: Alignment.bottomCenter,
