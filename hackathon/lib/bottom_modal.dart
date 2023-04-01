@@ -23,7 +23,8 @@ class VotingWidget extends State<StatefulWidget> {
   Widget build(context) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm a');
 
-    return Container(
+    return PointerInterceptor(
+        child: Container(
       height: 280,
       color: Colors.transparent,
       child: Container(
