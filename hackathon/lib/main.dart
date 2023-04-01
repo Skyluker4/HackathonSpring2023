@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -58,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Position? _currentPosition;
   LatLng _currentLatLng = const LatLng(27.671332124757402, 85.3125417636781);
 
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+
   final Completer<GoogleMapController> googleMapController = Completer();
 
   @override
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _loadMapStyles();
     _getLocation();
+    loadData();
   }
 
   _getLocation() async {
@@ -288,10 +290,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return pins;
   }
 
+  final List<Marker> _markers = <Marker>[];
+
+  loadData() async {
+    final pins = await getPins();
+    for (var i = 0; i < pins.length; i++) {
+      _markers.add(Marker(
+        markerId: MarkerId(pins[i].id.toString()),
+        position: LatLng(pins[i].latitude, pins[i].longitude),
+        // Change the icon to the bin type
+        // based on the pin type
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          pins[i].type == PinType.recycle ? 120 : 60,
+        ),
+        infoWindow: InfoWindow(
+          title: pins[i].type == PinType.recycle ? 'Recycle Bin' : 'Trash Bin',
+          snippet: pins[i].id,
+        ),
+      ));
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var pins = getPins();
-
+    var markers = <Marker>[];
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -307,11 +330,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             mapType: MapType.normal,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
+            markers: Set<Marker>.of(_markers),
             onMapCreated: (GoogleMapController controller) async {
               // to control the camera position of the map
-              setState(() {
-                googleMapController.complete(controller);
-              });
+              googleMapController.complete(controller);
               _setMapStyle();
             },
           ),
