@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hackathon/pin.dart';
 import 'package:intl/intl.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 double navLat = 0;
 double navLong = 0;
@@ -126,7 +127,7 @@ class VotingWidget extends State<StatefulWidget> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
