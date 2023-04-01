@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hackathon/pin.dart';
+import 'package:intl/intl.dart';
 
 class VotingWidget extends State<StatefulWidget> {
   Color _upColor = Colors.grey;
@@ -15,6 +16,8 @@ class VotingWidget extends State<StatefulWidget> {
 
   @override
   Widget build(context) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm a');
+
     return Container(
       height: 220,
       color: Colors.transparent,
@@ -45,7 +48,7 @@ class VotingWidget extends State<StatefulWidget> {
               ),
             ),
             Text(
-              "Added on ${pin.createdOn}",
+              "Added on ${formatter.format(pin.createdOn ?? DateTime(0))}",
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
