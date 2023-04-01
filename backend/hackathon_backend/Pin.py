@@ -3,7 +3,7 @@ import time
 
 class PinType(Enum):
     GARBAGE = 1
-    RECYCLING = 2
+    RECYCLE = 2
 
 class Pin:
     starting_votes = 1
