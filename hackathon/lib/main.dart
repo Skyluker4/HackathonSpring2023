@@ -52,22 +52,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _scene = 0;
 
-  void _incrementCounter() {
+  void _mainScene() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _scene = 0;
     });
   }
 
-  void _resetCounter() {
+  void _addScene() {
     setState(() {
-      _counter = 0;
+      _scene = 1;
+    });
+  }
+
+  void _locateScene() {
+    setState(() {
+      _scene = 2;
     });
   }
 
@@ -93,57 +94,108 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    onPressed: () {},
-                  ),
-                  IconButton(
+                  // Back button not visible if counter is 0
+                  if (_scene != 0)
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                      onPressed: _mainScene,
+                    ),
+                  // Options button (not implemented)
+                  /*IconButton(
                     icon: const Icon(Icons.settings),
                     onPressed: () {},
-                  ),
+                  ),*/
                 ],
               ),
               // The second row is aligned to the bottom of the SafeArea
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  // Locate button aligned to the bottom left
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      // SizedBox is used to set the size of the button
-                      child: SizedBox(
-                        height: 56,
-                        // MediaQuery is used to get the width of the screen
-                        // and subtract 112 to get the width of the button
-                        width: MediaQuery.of(context).size.width - 112,
-                        // extended is used to make the button wider
-                        child: FloatingActionButton.extended(
-                          onPressed: _resetCounter,
-                          label: const Text(
-                            'Locate',
-                            style: TextStyle(fontSize: 18),
+              // Only visible if _scene is 0
+              if (_scene == 0)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    // Locate button aligned to the bottom left
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        // SizedBox is used to set the size of the button
+                        child: SizedBox(
+                          height: 56,
+                          // MediaQuery is used to get the width of the screen
+                          // and subtract 112 to get the width of the button
+                          width: MediaQuery.of(context).size.width - 112,
+                          // extended is used to make the button wider
+                          child: FloatingActionButton.extended(
+                            onPressed: _locateScene,
+                            label: const Text(
+                              'Locate',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            icon: const Icon(Icons.location_on),
                           ),
-                          icon: const Icon(Icons.location_on),
                         ),
                       ),
                     ),
-                  ),
-                  // Add button aligned to the bottom right
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      // Simple button
-                      child: FloatingActionButton(
-                        onPressed: _incrementCounter,
-                        child: const Icon(Icons.add),
+                    // Add button aligned to the bottom right
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        // Simple button
+                        child: FloatingActionButton(
+                          onPressed: _addScene,
+                          child: const Icon(Icons.add),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              // Column containing the add scene
+              // Only visible if _scene is 1
+              if (_scene == 1)
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Two Buttons stacked on top of each other
+                    // Both are aligned to the center of the screen
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: SizedBox(
+                          height: 56,
+                          width: MediaQuery.of(context).size.width - 112,
+                          child: FloatingActionButton.extended(
+                            onPressed: () {},
+                            label: const Text(
+                              'Recycle Bin',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: SizedBox(
+                          height: 56,
+                          width: MediaQuery.of(context).size.width - 112,
+                          child: FloatingActionButton.extended(
+                            onPressed: () {},
+                            label: const Text(
+                              'Trash Can',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
             ],
           ),
         ));
