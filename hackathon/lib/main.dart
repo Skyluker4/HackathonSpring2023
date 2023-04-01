@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'pin.dart';
 import 'bottom_modal.dart';
+import 'package:background_fetch/background_fetch.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _scene = 0;
   String _darkMapStyle = '';
   String _lightMapStyle = '';
-
+  Timer timer = Timer(Duration(seconds: 1), () {});
   Position? _currentPosition;
   LatLng _currentLatLng = const LatLng(27.671332124757402, 85.3125417636781);
 
@@ -78,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _loadMapStyles();
     _getLocation();
     loadData();
-
+    timer = Timer.periodic(const Duration(seconds: 60), (Timer t) => loadData());
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(devicePixelRatio: 2.5),
             'assets/images/trash-resize.png')
@@ -92,6 +93,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       recycleIcon = onValue;
     });
   }
+
+
 
   _getLocation() async {
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -129,6 +132,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    timer.cancel();
     super.dispose();
   }
 
