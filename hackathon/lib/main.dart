@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,132 +74,86 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _mainPage() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        // Locate button aligned to the bottom left
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            // SizedBox is used to set the size of the button
+            child: SizedBox(
+              height: 56,
+              // MediaQuery is used to get the width of the screen
+              // and subtract 112 to get the width of the button
+              width: MediaQuery.of(context).size.width - 112,
+              // extended is used to make the button wider
+              child: FloatingActionButton.extended(
+                onPressed: _locateScene,
+                label: const Text(
+                  'Locate',
+                  style: TextStyle(fontSize: 18),
+                ),
+                icon: const Icon(Icons.location_on),
+              ),
+            ),
+          ),
+        ),
+        // Add button aligned to the bottom right
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20),
+            // Simple button
+            child: FloatingActionButton(
+              onPressed: _addScene,
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget back() {
+    return Scaffold(
+        body: SafeArea(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Back button not visible if counter is 0
+          if (_scene != 0)
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              onPressed: _mainScene,
+            ),
+          // Options button (not implemented)
+          /*IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {},
+                ),*/
+        ],
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-        appBar: null,
-        // The body is defined as a SafeArea
-        body: SafeArea(
-          // Two rows are defined
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // The first row is defined as a Row
-            // It contains a Text widget and a IconButton
-            children: [
-              // First row is aligned to the top of the SafeArea
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Back button not visible if counter is 0
-                  if (_scene != 0)
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                      onPressed: _mainScene,
-                    ),
-                  // Options button (not implemented)
-                  /*IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {},
-                  ),*/
-                ],
-              ),
-              // The second row is aligned to the bottom of the SafeArea
-              // Only visible if _scene is 0
-              if (_scene == 0)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    // Locate button aligned to the bottom left
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        // SizedBox is used to set the size of the button
-                        child: SizedBox(
-                          height: 56,
-                          // MediaQuery is used to get the width of the screen
-                          // and subtract 112 to get the width of the button
-                          width: MediaQuery.of(context).size.width - 112,
-                          // extended is used to make the button wider
-                          child: FloatingActionButton.extended(
-                            onPressed: _locateScene,
-                            label: const Text(
-                              'Locate',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            icon: const Icon(Icons.location_on),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Add button aligned to the bottom right
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        // Simple button
-                        child: FloatingActionButton(
-                          onPressed: _addScene,
-                          child: const Icon(Icons.add),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              // Column containing the add scene
-              // Only visible if _scene is 1
-              if (_scene == 1)
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Two Buttons stacked on top of each other
-                    // Both are aligned to the center of the screen
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: SizedBox(
-                          height: 56,
-                          width: MediaQuery.of(context).size.width - 112,
-                          child: FloatingActionButton.extended(
-                            onPressed: () {},
-                            label: const Text(
-                              'Recycle Bin',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            icon: const Icon(Icons.add),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: SizedBox(
-                          height: 56,
-                          width: MediaQuery.of(context).size.width - 112,
-                          child: FloatingActionButton.extended(
-                            onPressed: () {},
-                            label: const Text(
-                              'Trash Can',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            icon: const Icon(Icons.add),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-            ],
-          ),
-        ));
+      extendBodyBehindAppBar: true,
+      extendBody: true,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Back button
+            back(),
+            // Main page
+            if (_scene == 0) _mainPage(),
+          ],
+        ),
+      ),
+    );
   }
 }
