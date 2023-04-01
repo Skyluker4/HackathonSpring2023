@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'pin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -265,8 +269,29 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
+  Future<List<Pin>> getPins() async {
+    final response = await http
+        .get(Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin'));
+
+    List<Pin> pins = [];
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      for (var i = 0; i < data.length; i++) {
+        final pin = Pin.fromJson(data[i]);
+        pins.add(pin);
+      }
+    } else {
+      throw Exception('Failed to load pins');
+    }
+
+    return pins;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var pins = getPins();
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
