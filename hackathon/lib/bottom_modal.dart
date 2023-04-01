@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:html';
+import 'package:hackathon/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hackathon/pin.dart';
@@ -139,6 +141,9 @@ Future<void> sendVote(String id, int vote) async {
 }
 
 showBottomModal(context, Pin pin) async {
+  // Block mouse clicks on the map
+  MyHomePage.blockMouse = true;
+
   // Make a request to the server for pin details
   pin = await getPin(pin.id);
 
@@ -147,5 +152,7 @@ showBottomModal(context, Pin pin) async {
       backgroundColor: Colors.transparent,
       builder: (builder) {
         return VotingWidget(pin: pin).build(context);
-      });
+      }).whenComplete(() {
+    MyHomePage.blockMouse = false;
+  });
 }
