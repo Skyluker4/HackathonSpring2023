@@ -4,7 +4,7 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 	GET:
 		Response:
 			{
-				"id": int,
+				"id": string,
 				"latitude": float,
 				"longitude": float,
 				"type": string,
@@ -29,13 +29,13 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 			{
 				"latitude": float
 				"longitude": float
-				"length": int
-				"width": int
+				"wight": float
+				"height": float
 			}
 		Response:
 				[
 					{
-						"id": int,
+						"id": string,
 						"latitude": float,
 						"longitude": float,
 						"type": string
@@ -50,7 +50,7 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 			}
 		Response:
 			{
-				"id": int,
+				"id": string,
 				"latitude": float,
 				"longitude": float,
 				"type": string,
@@ -65,5 +65,5 @@ vote:
 	1: Upvote
 
 type:
-	"trash"
-	"recycle"
+	"GARBAGE"
+	"RECYCLE"

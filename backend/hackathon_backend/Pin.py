@@ -9,7 +9,7 @@ class PinType(Enum):
 class Pin:
     starting_votes = 1
 
-    def __init__(self, pin_type: PinType, latitude: float, longitude: float, votes: int = starting_votes, time_added: float = time.time(), id = int(uuid.uuid4())):
+    def __init__(self, pin_type: PinType, latitude: float, longitude: float, votes: int = starting_votes, time_added: int = int(time.time()), id: str = ""):
         self.pin_type = pin_type
         self.latitude = latitude
         self.longitude = longitude
