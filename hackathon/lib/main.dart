@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String _lightMapStyle = '';
   Timer timer = Timer(Duration(seconds: 1), () {});
   Position? _currentPosition;
-  LatLng _currentLatLng = const LatLng(27.671332124757402, 85.3125417636781);
+  LatLng _currentLatLng = const LatLng(36.0661969, -94.1737604);
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
