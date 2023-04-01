@@ -37,7 +37,7 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 				"votes": int
 			}
 
-/pins
+/pin
 	GET:
 		Request:
 			{
