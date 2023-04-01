@@ -197,6 +197,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
+<<<<<<< Updated upstream
+=======
+        // Add a button and animate sliding from the bottom up when created
+>>>>>>> Stashed changes
         Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
