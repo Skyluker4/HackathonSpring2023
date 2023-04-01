@@ -56,6 +56,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _scene = 0;
 
+  CameraPosition _initialCameraPosition = CameraPosition(target: LatLng(20.5937, 78.9629));
+  late final GoogleMapController googleMapController;
+
   void _mainScene() {
     setState(() {
       _scene = 0;
@@ -147,10 +150,23 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SafeArea(
         child: Stack(
           children: [
+            //Google Map
             // Back button
             back(),
             // Main page
             if (_scene == 0) _mainPage(),
+            GoogleMap(
+              initialCameraPosition: _initialCameraPosition ,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              mapType: MapType.normal,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              onMapCreated: (GoogleMapController c) {
+                // to control the camera position of the map
+                googleMapController = c;
+              },
+            ),
           ],
         ),
       ),
