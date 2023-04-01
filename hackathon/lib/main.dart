@@ -40,15 +40,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -60,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String _darkMapStyle = '';
   String _lightMapStyle = '';
 
+  Position? _currentPosition;
+  LatLng _currentLatLng = const LatLng(27.671332124757402, 85.3125417636781);
+
   final Completer<GoogleMapController> googleMapController = Completer();
 
   @override
@@ -67,6 +61,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _loadMapStyles();
+    _getLocation();
+  }
+
+  _getLocation() async {
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    var pp = await Geolocator.checkPermission();
+    // if (pp.name == LocationPermission.always) {
+    _currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    _currentLatLng =
+        LatLng(_currentPosition!.latitude, _currentPosition!.longitude);
+    setState(() {});
   }
 
   Future _loadMapStyles() async {
@@ -96,9 +102,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
-  final CameraPosition _initialCameraPosition =
-      const CameraPosition(target: LatLng(20.5937, 78.9629));
 
   void _mainScene() {
     setState(() {
@@ -245,19 +248,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         padding: const EdgeInsets.only(bottom: 132, right: 23),
         child: IconButton(
           onPressed: () {
-            // Get current location of the user
-            Geolocator.getCurrentPosition().then((value) {
-              // Move the camera to the current location
-              googleMapController.future.then((controller) {
-                controller.animateCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                      target: LatLng(value.latitude, value.longitude),
-                      zoom: 18,
-                    ),
+            googleMapController.future.then((controller) {
+              controller.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: _currentLatLng,
+                    zoom: 18,
                   ),
-                );
-              });
+                ),
+              );
             });
           },
           icon: const Icon(Icons.my_location),
@@ -275,16 +274,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         children: [
           // Google Map
           GoogleMap(
-            initialCameraPosition: _initialCameraPosition,
+            initialCameraPosition:
+                CameraPosition(zoom: 18, target: _currentLatLng),
             compassEnabled: false,
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             mapType: MapType.normal,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
+            onMapCreated: (GoogleMapController controller) async {
               // to control the camera position of the map
-              googleMapController.complete(controller);
+              setState(() {
+                googleMapController.complete(controller);
+              });
               _setMapStyle();
             },
           ),
