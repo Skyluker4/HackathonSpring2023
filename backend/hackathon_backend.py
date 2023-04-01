@@ -14,7 +14,7 @@ def get_pins():
         Pin(PinType.RECYCLE, 37.7749, -122.4194),
     ]
 
-    return jsonify(pins)
+    return jsonify([pin.to_map_json() for pin in pins])
 
 @app.route('/pin/{id}')
 def get_pin():
@@ -26,7 +26,10 @@ def put_vote():
     return ""
 
 
+def __main__():
+    app.run()
+
 
 # Run the program
 if __name__ == '__main__':
-    app.run()
+    __main__()

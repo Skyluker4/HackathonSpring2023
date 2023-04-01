@@ -23,3 +23,21 @@ class Pin:
 
     def __str__(self):
         return f"Pin ({self.pin_type}) created on {self.time_added}:\t{self.latitude}, {self.longitude}"
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "type": self.pin_type.name,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "createdOn": self.time_added,
+            "votes": self.votes
+        }
+
+    def to_map_json(self):
+        return {
+            "id": self.id,
+            "type": self.pin_type.name,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+        }
