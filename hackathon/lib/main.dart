@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _scene = 0;
   String _darkMapStyle = '';
   String _lightMapStyle = '';
-  Timer timer = Timer(Duration(seconds: 1), () {});
+  Timer timer = Timer(const Duration(seconds: 1), () {});
   Position? _currentPosition;
   LatLng _currentLatLng = const LatLng(36.0661969, -94.1737604);
 

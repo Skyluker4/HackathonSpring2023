@@ -1,8 +1,12 @@
 import 'dart:convert';
+import 'package:hackathon/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hackathon/pin.dart';
 import 'package:intl/intl.dart';
+
+double navLat = 0;
+double navLong = 0;
 
 class VotingWidget extends State<StatefulWidget> {
   Color _upColor = Colors.grey;
@@ -16,19 +20,21 @@ class VotingWidget extends State<StatefulWidget> {
 
   @override
   Widget build(context) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm a');
+    final DateFormat formatter = DateFormat('yyyy-MM-dd hh:mm a');
 
     return Container(
-      height: 220,
+      height: 280,
       color: Colors.transparent,
       child: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: Brightness.dark == Theme.of(context).brightness
+              ? Colors.grey[850]
+              : Colors.white,
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10.0),
             topRight: Radius.circular(10.0),
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 10.0, // has the effect of softening the shadow
@@ -97,6 +103,25 @@ class VotingWidget extends State<StatefulWidget> {
                   },
                 ),
               ],
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: 76,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    // Pass lat and long to main
+                    navLat = pin.latitude;
+                    navLong = pin.longitude;
+                  },
+                  label: const Text(
+                    'Navigate to Pin',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  icon: const Icon(Icons.location_on),
+                ),
+              ),
             ),
           ],
         ),
