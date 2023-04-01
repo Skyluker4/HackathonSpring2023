@@ -7,8 +7,9 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 				"id": int,
 				"latitude": float,
 				"longitude": float,
-				"type": float,
+				"type": string,
 				"createdOn": int
+				"votes": int
 			}
 	POST:
 		Request:
@@ -22,8 +23,9 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 				"id": int,
 				"latitude": float,
 				"longitude": float,
-				"type": float,
+				"type": string,
 				"createdOn": int
+				"votes": int
 			}
 
 /pin/{id}/vote
@@ -47,17 +49,14 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 				"height": int
 			}
 		Response:
-			{
-				"pins":
-					[
-						{
-							"id": int,
-							"latitude": float,
-							"longitude": float,
-							"type": string
-						}
-					]
-			}
+				[
+					{
+						"id": int,
+						"latitude": float,
+						"longitude": float,
+						"type": string
+					}
+				]
 
 
 vote:
