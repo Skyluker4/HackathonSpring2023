@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int _scene = 0;
   String _darkMapStyle = '';
   String _lightMapStyle = '';
+  bool plusSelected = false;
 
   Position? _currentPosition;
   LatLng _currentLatLng = const LatLng(27.671332124757402, 85.3125417636781);
@@ -139,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void _addScene() {
+    plusSelected = true;
     setState(() {
       _scene = 1;
     });
@@ -197,8 +199,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        Align(
-          alignment: Alignment.bottomLeft,
+        // Add a button and animate sliding from the bottom up when created
+        AnimatedAlign(
+          // If plus selected is true the button will be animated from the bottom moving up
+          // If plus selected is false the button will be animated from the top moving down
+          
           child: Padding(
             padding: const EdgeInsets.only(bottom: 20, left: 20),
             child: SizedBox(
@@ -435,6 +440,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               _setMapStyle();
             },
           ),
+          //Add pins to map
           SafeArea(
             child: Stack(
               children: [
