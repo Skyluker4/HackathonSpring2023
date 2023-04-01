@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'pin.dart';
+import 'bottom_modal.dart';
 
 void main() {
   runApp(const MyApp());
@@ -321,6 +322,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           title: pins[i].type == PinType.recycle ? 'Recycle Bin' : 'Trash Bin',
           snippet: pins[i].id,
         ),
+        onTap: () => {showBottomModal(context)},
       ));
       setState(() {});
     }
