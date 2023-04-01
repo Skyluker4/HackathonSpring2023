@@ -444,7 +444,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         icon: pins[i].type == PinType.recycle ? recycleIcon : trashIcon,
         infoWindow: InfoWindow(
           title: pins[i].type == PinType.recycle ? 'Recycle Bin' : 'Trash Bin',
-          snippet: pins[i].id,
+          snippet: "{pins[i].latitude}, {pins[i].longitude}",
         ),
         onTap: () => {showBottomModal(context, pins[i])},
       ));
