@@ -1,0 +1,70 @@
+Endpiont: https://hackathon.lukesimmons.codes/api/v1
+
+/pin/{id}
+	GET:
+		Response:
+			{
+				"id": int,
+				"latitude": float,
+				"longitude": float,
+				"type": float,
+				"createdOn": int
+			}
+	POST:
+		Request:
+			{
+				"latitude": float,
+				"longitude": float,
+				"type": string
+			}
+		Response:
+			{
+				"id": int,
+				"latitude": float,
+				"longitude": float,
+				"type": float,
+				"createdOn": int
+			}
+
+/pin/{id}/vote
+	PUT:
+		Request:
+			{
+				"vote": int
+			}
+		Return:
+			{
+				"votes": int
+			}
+
+/pins
+	GET:
+		Request:
+			{
+				"latitude": float
+				"longitude": float
+				"length": int
+				"height": int
+			}
+		Response:
+			{
+				"pins":
+					[
+						{
+							"id": int,
+							"latitude": float,
+							"longitude": float,
+							"type": string
+						}
+					]
+			}
+
+
+vote:
+	-1: Downvote
+	0: Remove vote
+	1: Upvote
+
+type:
+	"trash"
+	"recycle"
