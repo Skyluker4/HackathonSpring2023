@@ -46,7 +46,7 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 				"latitude": float
 				"longitude": float
 				"length": int
-				"height": int
+				"width": int
 			}
 		Response:
 				[
