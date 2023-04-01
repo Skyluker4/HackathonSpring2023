@@ -76,10 +76,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future _setMapStyle() async {
     final controller = await googleMapController.future;
     final theme = WidgetsBinding.instance.window.platformBrightness;
-    if (theme == Brightness.dark)
+    if (theme == Brightness.dark) {
       controller.setMapStyle(_darkMapStyle);
-    else
+    } else {
       controller.setMapStyle(_lightMapStyle);
+    }
   }
 
   @override
@@ -95,8 +96,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  CameraPosition _initialCameraPosition =
-      CameraPosition(target: LatLng(20.5937, 78.9629));
+  final CameraPosition _initialCameraPosition =
+      const CameraPosition(target: LatLng(20.5937, 78.9629));
 
   void _mainScene() {
     setState(() {
@@ -181,21 +182,54 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             ),
           ),
         ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: SizedBox(
-              height: 56,
-              width: MediaQuery.of(context).size.width - 112,
-              child: FloatingActionButton.extended(
-                onPressed: _mainScene,
-                label: const Text(
-                  'Garbage Bin',
-                  style: TextStyle(fontSize: 18),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: SizedBox(
+                  height: 56,
+                  width: MediaQuery.of(context).size.width - 112,
+                  child: FloatingActionButton.extended(
+                    onPressed: _mainScene,
+                    label: const Text(
+                      'Compost Bin',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    icon: const Icon(Icons.grass),
+                  ),
                 ),
-                icon: const Icon(Icons.delete),
               ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: FloatingActionButton(
+                  onPressed: _mainScene,
+                  child: const Icon(Icons.arrow_back),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _locatePage() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: FloatingActionButton(
+              onPressed: _mainScene,
+              child: const Icon(Icons.arrow_back),
             ),
           ),
         ),
@@ -207,18 +241,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        // Back button not visible if counter is 0
-        if (_scene != 0)
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: FloatingActionButton(
-                onPressed: _mainScene,
-                child: const Icon(Icons.arrow_back),
-              ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: FloatingActionButton(
+              onPressed: _mainScene,
+              child: const Icon(Icons.arrow_back),
             ),
           ),
+        ),
       ],
     );
   }
@@ -251,7 +283,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 // Switch between scenes
                 if (_scene == 0) _mainPage(),
                 if (_scene == 1) _addPage(),
-                if (_scene == 2) _back(),
+                if (_scene == 2) _locatePage(),
               ],
             ),
           ),
