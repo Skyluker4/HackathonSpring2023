@@ -549,7 +549,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           polylineId: const PolylineId('iter'),
           visible: true,
           points: routeCoords,
-          width: 4,
+          width: 6,
           color: Colors.blue,
           startCap: Cap.roundCap,
           endCap: Cap.buttCap));

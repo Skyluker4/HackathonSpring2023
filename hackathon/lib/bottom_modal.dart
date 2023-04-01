@@ -62,12 +62,7 @@ class VotingWidget extends State<StatefulWidget> {
                   icon: Icon(Icons.thumb_down, color: _downColor),
                   iconSize: 40,
                   onPressed: () {
-                    setState(() {
-                      _downColor =
-                          _downColor == Colors.red ? Colors.grey : Colors.red;
-                      _upColor = Colors.grey;
-                    });
-                    //sendVote(pin.id, -1);
+                    sendVote(pin.id, -1);
                   },
                 ),
                 Column(
@@ -92,12 +87,7 @@ class VotingWidget extends State<StatefulWidget> {
                   icon: Icon(Icons.thumb_up, color: _upColor),
                   iconSize: 40,
                   onPressed: () {
-                    setState(() {
-                      _upColor =
-                          _upColor == Colors.green ? Colors.grey : Colors.green;
-                      _downColor = Colors.grey;
-                    });
-                    //sendVote(pin.id, 1);
+                    sendVote(pin.id, 1);
                   },
                 ),
               ],
@@ -112,7 +102,7 @@ class VotingWidget extends State<StatefulWidget> {
 Future<Pin> getPin(String id) async {
   // Make a request to the server for pin details
   final response = await http
-      .get(Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin/$id'));
+      .get(Uri.parse('https://hackathon.lukesimmons.codes/api/v1/pin/$id'));
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
@@ -125,7 +115,7 @@ Future<Pin> getPin(String id) async {
 
 Future<void> sendVote(String id, int vote) async {
   final response = await http.put(
-    Uri.parse('http://hackathon.lukesimmons.codes/api/v1/pin/$id/vote'),
+    Uri.parse('https://hackathon.lukesimmons.codes/api/v1/pin/$id/vote'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Response-Type': 'application/json',
