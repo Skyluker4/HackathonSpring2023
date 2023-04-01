@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _getLocation();
     loadData();
     timer =
-        Timer.periodic(const Duration(seconds: 60), (Timer t) => loadData());
+        Timer.periodic(const Duration(seconds: 15), (Timer t) => loadData());
     BitmapDescriptor.fromAssetImage(
             const ImageConfiguration(devicePixelRatio: 2.5),
             'assets/images/trash-resize.png')
