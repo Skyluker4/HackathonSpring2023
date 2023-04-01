@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:hackathon/pin.dart';
 import 'package:intl/intl.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 class VotingWidget extends State<StatefulWidget> {
   Color _upColor = Colors.grey;
@@ -18,7 +19,8 @@ class VotingWidget extends State<StatefulWidget> {
   Widget build(context) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm a');
 
-    return Container(
+    return PointerInterceptor(
+        child: Container(
       height: 220,
       color: Colors.transparent,
       child: Container(
@@ -101,7 +103,7 @@ class VotingWidget extends State<StatefulWidget> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
