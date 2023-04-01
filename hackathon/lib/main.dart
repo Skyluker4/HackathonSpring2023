@@ -327,12 +327,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Widget _centerPin() {
-    return const Align(
+    return Align(
       alignment: Alignment.center,
-      child: Icon(
-        Icons.location_on,
-        size: 30,
-        color: Colors.black,
+      // Offset the pin by 20 pixels up
+      child: Transform.translate(
+        offset: const Offset(0, -30),
+        child: const Icon(
+          Icons.location_on,
+          size: 30,
+          color: Colors.black,
+        ),
       ),
     );
   }
