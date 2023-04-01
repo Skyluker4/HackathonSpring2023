@@ -205,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _recycleButton() {
+  Widget _addRecycleButton() {
     return FloatingActionButton.extended(
       // Add recycle bin to the map when pressed
       onPressed: () {
@@ -231,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _trashButton() {
+  Widget _addTrashButton() {
     return FloatingActionButton.extended(
       onPressed: () {
         final controller = googleMapController.future;
@@ -273,7 +273,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             child: SizedBox(
               height: 56,
               width: MediaQuery.of(context).size.width - 112,
-              child: _recycleButton(),
+              child: _addRecycleButton(),
             ),
           ),
         ),
@@ -287,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 child: SizedBox(
                   height: 56,
                   width: MediaQuery.of(context).size.width - 112,
-                  child: _trashButton(),
+                  child: _addTrashButton(),
                 ),
               ),
             ),
@@ -304,10 +304,58 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
+  Widget findTrash() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        _locateScene();
+      },
+      label: const Text(
+        'Trash',
+        style: TextStyle(fontSize: 18),
+      ),
+      icon: const Icon(Icons.search),
+    );
+  }
+
+  Widget findRecycle() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        _locateScene();
+      },
+      label: const Text(
+        'Recycle',
+        style: TextStyle(fontSize: 18),
+      ),
+      icon: const Icon(Icons.search),
+    );
+  }
+
   Widget _locatePage() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 5),
+            child: SizedBox(
+              height: 56,
+              width: MediaQuery.of(context).size.width / 2 - 59,
+              child: findTrash(),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 5, right: 16),
+            child: SizedBox(
+              height: 56,
+              width: MediaQuery.of(context).size.width / 2 - 63,
+              child: findRecycle(),
+            ),
+          ),
+        ),
         Align(
           alignment: Alignment.bottomRight,
           child: Padding(
@@ -344,16 +392,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Widget _centerPin() {
-    return Align(
+    return const Align(
       alignment: Alignment.center,
       // Offset the pin by 20 pixels up
-      child: Transform.translate(
-        offset: const Offset(0, -30),
-        child: const Icon(
-          Icons.location_on,
-          size: 30,
-          color: Colors.black,
-        ),
+      child: Icon(
+        Icons.location_on,
+        size: 30,
+        color: Colors.black,
       ),
     );
   }
