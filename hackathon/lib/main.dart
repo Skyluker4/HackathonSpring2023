@@ -61,6 +61,10 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   final Completer<GoogleMapController> googleMapController = Completer();
 
+  // Custom icons for the markers
+  late final BitmapDescriptor trashIcon;
+  late final BitmapDescriptor recycleIcon;
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +72,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     _loadMapStyles();
     _getLocation();
     loadData();
+
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/trash-resize.png')
+        .then((onValue) {
+      trashIcon = onValue;
+    });
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(devicePixelRatio: 2.5),
+            'assets/images/recycle-resize.png')
+        .then((onValue) {
+      recycleIcon = onValue;
+    });
   }
 
   _getLocation() async {
@@ -298,11 +315,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       _markers.add(Marker(
         markerId: MarkerId(pins[i].id.toString()),
         position: LatLng(pins[i].latitude, pins[i].longitude),
-        // Change the icon to the bin type
-        // based on the pin type
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-          pins[i].type == PinType.recycle ? 120 : 60,
-        ),
+        // Custom icons for PinType.recycle and PinType.trash
+        icon: pins[i].type == PinType.recycle ? recycleIcon : trashIcon,
         infoWindow: InfoWindow(
           title: pins[i].type == PinType.recycle ? 'Recycle Bin' : 'Trash Bin',
           snippet: pins[i].id,
