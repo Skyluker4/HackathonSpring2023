@@ -22,9 +22,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Hackathon App Demo'),
     );
   }
 }
@@ -58,6 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+    });
+  }
+
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
     });
   }
 
@@ -96,19 +102,64 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'You have pushed the button:',
+              style: TextStyle(fontSize: 20),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            // Counter text and 'times' text are in the same row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '$_counter',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    ' times',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      // Two buttons in the same row
+      // Buttons are aligned to the left and right of the screen
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          // Reset button
+          // Aligns the button to the left with a padding of 35
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 35),
+              // SizedBox is used to set the size of the button
+              child: SizedBox(
+                // The height of the button is 56
+                height: 56,
+                // The width of the button is constrained to the increment button
+                width: MediaQuery.of(context).size.width - 112,
+                child: FloatingActionButton.extended(
+                  onPressed: _resetCounter,
+                  label: const Text('Reset'),
+                  icon: const Icon(Icons.refresh),
+                ),
+              ),
+            ),
+          ),
+          // Increment button
+          // Aligns the button to the right of the screen
+          Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: _incrementCounter,
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
