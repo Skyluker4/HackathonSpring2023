@@ -25,13 +25,6 @@ Endpiont: https://hackathon.lukesimmons.codes/api/v1
 
 /pin
 	GET:
-		Request:
-			{
-				"latitude": float
-				"longitude": float
-				"wight": float
-				"height": float
-			}
 		Response:
 				[
 					{

@@ -29,31 +29,6 @@ def select_pin_from_id(id: str):
 @app.route('/pin', methods=['GET'])
 @app.route('/pin/', methods=['GET'])
 def get_pins():
-    # Deserialize the request body
-    body = request.get_json()
-
-    try:
-        latitude = float(body['latitude'])
-        longitude = float(body['longitude'])
-        width = float(body['width'])
-        height = float(body['height'])
-    except KeyError:
-        return jsonify({
-            "error": "Missing parameters in request body"
-        }), 400
-    except ValueError:
-        return jsonify({
-            "error": "Invalid parameters in request body"
-        }), 400
-
-    '''
-    If needed in the future...
-    cursor.execute("""
-        SELECT * FROM pins
-        WHERE latitude < %s AND latitude > %s AND longitude < %s AND longitude > %s;
-    """, (latitude + height, latitude - height, longitude + width, longitude - width,))
-    '''
-
     # Get all pins
     cursor.execute("SELECT id, type, latitude, longitude FROM pins")
     results = cursor.fetchall()
