@@ -150,6 +150,24 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     });
   }
 
+  Widget _locateButton() {
+    return FloatingActionButton.extended(
+      onPressed: _locateScene,
+      label: const Text(
+        'Locate',
+        style: TextStyle(fontSize: 18),
+      ),
+      icon: const Icon(Icons.location_on),
+    );
+  }
+
+  Widget _addButton() {
+    return FloatingActionButton(
+      onPressed: _addScene,
+      child: const Icon(Icons.add),
+    );
+  }
+
   Widget _mainPage() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,14 +184,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               // and subtract 112 to get the width of the button
               width: MediaQuery.of(context).size.width - 112,
               // extended is used to make the button wider
-              child: FloatingActionButton.extended(
-                onPressed: _locateScene,
-                label: const Text(
-                  'Locate',
-                  style: TextStyle(fontSize: 18),
-                ),
-                icon: const Icon(Icons.location_on),
-              ),
+              child: _locateButton(),
             ),
           ),
         ),
@@ -183,13 +194,67 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           child: Padding(
             padding: const EdgeInsets.only(right: 20),
             // Simple button
-            child: FloatingActionButton(
-              onPressed: _addScene,
-              child: const Icon(Icons.add),
-            ),
+            child: _addButton(),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _recycleButton() {
+    return FloatingActionButton.extended(
+      // Add recycle bin to the map when pressed
+      onPressed: () {
+        // Get lat and long of the current position of the middle of the screen
+        final controller = googleMapController.future;
+        controller.then((value) {
+          value.getVisibleRegion().then((value) {
+            final lat =
+                (value.northeast.latitude + value.southwest.latitude) / 2;
+            final long =
+                (value.northeast.longitude + value.southwest.longitude) / 2;
+            // Add the marker to the map
+            sendPin(lat, long, 'RECYCLE');
+          });
+        });
+        _mainScene();
+      },
+      label: const Text(
+        'Recycle Bin',
+        style: TextStyle(fontSize: 18),
+      ),
+      icon: const Icon(Icons.recycling),
+    );
+  }
+
+  Widget _trashButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        final controller = googleMapController.future;
+        controller.then((value) {
+          value.getVisibleRegion().then((value) {
+            final lat =
+                (value.northeast.latitude + value.southwest.latitude) / 2;
+            final long =
+                (value.northeast.longitude + value.southwest.longitude) / 2;
+            // Add the marker to the map
+            sendPin(lat, long, 'GARBAGE');
+          });
+        });
+        _mainScene();
+      },
+      label: const Text(
+        'Trash Bin',
+        style: TextStyle(fontSize: 18),
+      ),
+      icon: const Icon(Icons.delete),
+    );
+  }
+
+  Widget _backButton() {
+    return FloatingActionButton(
+      onPressed: _mainScene,
+      child: const Icon(Icons.arrow_back),
     );
   }
 
@@ -204,31 +269,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             child: SizedBox(
               height: 56,
               width: MediaQuery.of(context).size.width - 112,
-              child: FloatingActionButton.extended(
-                // Add recycle bin to the map when pressed
-                onPressed: () {
-                  // Get lat and long of the current position of the middle of the screen
-                  final controller = googleMapController.future;
-                  controller.then((value) {
-                    value.getVisibleRegion().then((value) {
-                      final lat = (value.northeast.latitude +
-                              value.southwest.latitude) /
-                          2;
-                      final long = (value.northeast.longitude +
-                              value.southwest.longitude) /
-                          2;
-                      // Add the marker to the map
-                      sendPin(lat, long, 'RECYCLE');
-                    });
-                  });
-                  _mainScene();
-                },
-                label: const Text(
-                  'Recycle Bin',
-                  style: TextStyle(fontSize: 18),
-                ),
-                icon: const Icon(Icons.recycling),
-              ),
+              child: _recycleButton(),
             ),
           ),
         ),
@@ -242,29 +283,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 child: SizedBox(
                   height: 56,
                   width: MediaQuery.of(context).size.width - 112,
-                  child: FloatingActionButton.extended(
-                    onPressed: () {
-                      final controller = googleMapController.future;
-                      controller.then((value) {
-                        value.getVisibleRegion().then((value) {
-                          final lat = (value.northeast.latitude +
-                                  value.southwest.latitude) /
-                              2;
-                          final long = (value.northeast.longitude +
-                                  value.southwest.longitude) /
-                              2;
-                          // Add the marker to the map
-                          sendPin(lat, long, 'GARBAGE');
-                        });
-                      });
-                      _mainScene();
-                    },
-                    label: const Text(
-                      'Trash Bin',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    icon: const Icon(Icons.delete),
-                  ),
+                  child: _trashButton(),
                 ),
               ),
             ),
@@ -272,10 +291,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               alignment: Alignment.bottomRight,
               child: Padding(
                 padding: const EdgeInsets.only(right: 20),
-                child: FloatingActionButton(
-                  onPressed: _mainScene,
-                  child: const Icon(Icons.arrow_back),
-                ),
+                child: _backButton(),
               ),
             ),
           ],
@@ -292,10 +308,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: FloatingActionButton(
-              onPressed: _mainScene,
-              child: const Icon(Icons.arrow_back),
-            ),
+            child: _backButton(),
           ),
         ),
       ],
